@@ -135,10 +135,10 @@ public class Connection extends Thread{
 				respond(Response.getWrongHeaderError());
 				return;
 			}
-			
 			if (str.get(1).equals("request time")) {
 				if (str.get(2).equals("message/body")) {
-					respond(Response.getTimeStamp());
+					//respond(Response.getTimeStamp());
+					Server.respondOnSocket(user, Response.getTimeStamp());
 				}
 			}
 			else if (str.get(1).equals("group join")) {
@@ -213,7 +213,6 @@ public class Connection extends Thread{
 				
 				msg = Response.getNotifyUser(user, receiver, msg, lines);
 				int errCode = Server.respondOnSocket(receiver, msg);
-				System.out.println("ErrorCode: " + errCode);
 				if (errCode == 1) {
 					respond(Response.userDestinationUnknown(receiver));
 				}

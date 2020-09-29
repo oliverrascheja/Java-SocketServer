@@ -54,6 +54,19 @@ public class AdminCommands extends Thread{
 				}
 				System.out.print("\n");
 			}
+			else if (line.contains("all:")) {
+				String str = line;
+				str = str.replace("all:", "");
+				int ret = Server.notifyToAll(str);
+				if (ret == 1) System.out.println("successfully messaged everyone online.");
+			}
+			else if (line.contains("kick user ")) {
+				String str = line;
+				str = str.replace("kick user ", "");
+				int ret = Server.kickUser(str);
+				if (ret == 0) System.out.println("User '" + str + "' was kicked from the server.");
+				else if (ret == 1) System.out.println("User '" + str + "' cannot be found.");
+			}
 			else if (line.contains("list groups")) {
 				for (int i = 0; i < Server.clients.size(); i++) {
 					System.out.println("Group '" + Server.groups.get(i).getGroupName() + "'  ");
@@ -69,10 +82,12 @@ public class AdminCommands extends Thread{
 			}
 			else if (line.contains("help")) {
 				System.out.println("Help Page: ");
-				System.out.println("'toggle log' : print all future messages");
-				System.out.println("'list users' : list all users");
-				System.out.println("'list groups' : list all groups");
-				System.out.println("'exit' : shut down server.\n\n");
+				System.out.println("	'toggle log' : print all future messages");
+				System.out.println("	'all: message' : send message to all users");
+				System.out.println("	'kick user abc' : kick abc from the server");
+				System.out.println("	'list users' : list all users");
+				System.out.println("	'list groups' : list all groups");
+				System.out.println("	'exit' : shut down server.\n\n");
 			}
 			
 		}

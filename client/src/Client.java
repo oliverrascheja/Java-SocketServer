@@ -49,6 +49,7 @@ public class Client {
 		empfang.start();
 		
 		System.out.println("Enter a message ('stop' or 'exit' to end this program).");
+		System.out.println("'help' for further information");
 		
 		boolean repeat = true;
 		try {
@@ -56,6 +57,17 @@ public class Client {
 				String eingabe = scanner.nextLine();
 				if ((eingabe.contains("exit")) || (eingabe.equals("stop")))  {
 					repeat = false;
+				}
+				else if (eingabe.contains("get time")) {
+					sendTimeRequest(socket);
+				}
+				//else if (eingabe.contains("group join ")) {	}
+				
+				else if (eingabe.contains("help")) {
+					System.out.println("Help Page: ");
+					System.out.println("	'get time' : current server time");
+					System.out.println("	'user: message' : send message to user");
+					System.out.println("	'exit' : disconnect from server.\n\n");
 				}
 				else {
 					empfaenger = eingabe.split(":")[0];
@@ -142,6 +154,20 @@ public class Client {
 	
 	
 	/**
+	 * Sends a "Join Group" command to Server
+	 * @param socket  the Socket of the sender
+	 * @param groupName  the name of the group to join
+	 * @param benutzer  the user name to join the group
+	 */
+	//public static void joinGroup(Socket socket, String groupName, String benutzer) {
+	//	String str = "message/head\n" + "group join\n" + benutzer + "\n" + "message/body\n";
+	//	sendMessage(socket, str);
+	//	System.out.println("joining group + '" + groupName + "' ...");
+	//}
+	
+	
+	
+	/**
 	 * Sends a message to another user via server.
 	 * @param socket  the Socket of the sender
 	 * @param benutzer  the user name of the sender
@@ -170,6 +196,17 @@ public class Client {
 		socket.close();
 		
 		System.exit(0);
+	}
+	
+	
+	
+	/**
+	 * Sends a command to get the current server time
+	 * @param socket  the Socket of the outgoing message
+	 */
+	static void sendTimeRequest(Socket socket) {
+		String str = "message/head\n" + "request time\n" + "message/body\n"; 
+		sendMessage(socket, str);
 	}
 	
 	

@@ -36,6 +36,7 @@ public class Empfang extends Thread{
 		while (running) {
 			try {
 				response = getResponse(socket);
+				
 				if (response.size() > 2) {
 					if (response.get(1).contains("user text notify")) {
 						if (response.get(3).contains(user)) {
@@ -47,9 +48,16 @@ public class Empfang extends Thread{
 										Client.leaveUser(socket, user);
 										kill();
 									}
+									if (response.get(l).contains("INFO: You were kicked from the Server.")) {
+										Client.leaveUser(socket, user);
+										kill();
+									}
 								}
 							}
 						}
+					}
+					else if (response.get(1).contains("response time")) {
+						System.out.println("Server time: " + response.get(4));
 					}
 					else if (response.get(1).contains("error")){
 						for (int l = 3; l <= response.size() - 1; l++) {

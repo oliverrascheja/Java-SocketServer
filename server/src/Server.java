@@ -11,7 +11,7 @@ public class Server {
 	
 	static ServerSocket serverSocket;
 	
-	static List<Socket> socketList; //maybe not neccessary anymore.
+	static List<Socket> socketList;
 	
 	static List<Connection> clients;
 	static List<Group> groups;
@@ -41,6 +41,7 @@ public class Server {
 	
 	/**
 	 * Manages new Clients and processing 'join' and 'request time' commands. containing infinite loop.
+	 * All users doesn't have to be logged in to the Server to perform these commands listed in this method
 	 * @author github.com/oliverrascheja
 	 */
 	private static void manageNewClients() {
@@ -69,6 +70,7 @@ public class Server {
 					}
 					
 					if ((request.get(0).contains("message/head") && (request.get(1).contains("request time")))) {
+						System.out.println("requested server time");
 						String str = Response.getTimeStamp();
 						OutputStream outputstream = currSocket.getOutputStream();
 						outputstream.write(str.getBytes());
@@ -176,6 +178,22 @@ public class Server {
 	
 	
 	/**
+	 * Sends a notification to all users online
+	 * @param message  the message from admin to all users
+	 * @return returns always 1
+	 */
+	public static int notifyToAll(String msg) {
+		for (int i = 0; i < clients.size(); i++) {
+			String str = clients.get(i).getUserName();
+			String message = Response.getNotifyUser("Server", str, msg, 1);
+			clients.get(i).respond(message);
+		}
+		return 1;
+	}
+	
+	
+	
+	/**
 	 * Sending a recieved message to the reciever.
 	 * @param userName  the reciever's user name
 	 * @param msg  the message
@@ -196,6 +214,26 @@ public class Server {
 	}
 	
 	
+	
+	/**
+	 * Kicks a user from the server.
+	 * @param userName  the user to be kicked
+	 * @return returns 0 if kicked, 1 if not kicked
+	 */
+	public static int kickUser(String userName) {
+		for (Connection client : clients) {
+			String str = client.getUserName();
+			System.out.println(client.getUserName());
+			if (str.equals(userName)) {
+				String msg = Response.getNotifyUser("Server", userName, "INFO: You were kicked from the Server.", 1);
+				client.respond(msg);
+				client.clientConnectedToServer = false;
+				clients.remove(client);
+				return 0;
+			}
+		}
+		return 1;
+	}
 	
 	/**
 	 * Search for specified group and returning reference to it.
@@ -227,10 +265,12 @@ public class Server {
 	
 	/**
 	 * Disconnects with all groups and all users.
+	 * @return returns always 0 after completion.
 	 */
-	public static void disconnectAll() {
+	public static int disconnectAll() {
 		disconnectAllGroups();
 		disconnectAllClients();
+		return 0;
 	}
 	
 	
@@ -257,6 +297,7 @@ public class Server {
 				String msg = Response.getNotifyUser("Server", client.getUserName(), "INFO: Server is shutting down.", 1);
 				client.respond(msg);
 				client.clientConnectedToServer = false;
+				clients.remove(client);
 			}
 		} catch (Exception e) {e.printStackTrace();}
 	}
@@ -268,15 +309,16 @@ public class Server {
 	 */
 	public static void closeServer() {
 		
-		disconnectAll();
-
-		try {
-			serverSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		int ret = disconnectAll();
+		if (ret == 0) {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Server closed.");
+			System.out.println(" (c) Oliver Rascheja.");
+			System.exit(0);
 		}
-		System.out.println("Server closed.");
-		System.out.println(" (c) Oliver Rascheja.");
-		System.exit(0);
 	}
 }
