@@ -26,9 +26,9 @@ public class Server {
 	public static void main(String[] args) throws IOException {
 		
 		serverSocket = new ServerSocket(44445);
-		socketList = new ArrayList<Socket>();
-		clients = new ArrayList<Connection>();
-		groups = new ArrayList<Group>();
+		socketList = new ArrayList<>();
+		clients = new ArrayList<>();
+		groups = new ArrayList<>();
 		
 		AdminCommands adminCommands = new AdminCommands(InetAddress.getLocalHost());
 		adminCommands.start();
@@ -88,11 +88,8 @@ public class Server {
 							System.out.println("log: User '" + co.getUserName() + "' connected to the server.");
 					}
 				}
-			} 
-			catch (SocketException se) {
-				//System.out.println();
 			}
-			catch (IOException e) {
+			catch (Exception e) {
 				e.printStackTrace();
 			} 
 		}
@@ -130,7 +127,6 @@ public class Server {
 	 * @param message  the actual message as a String
 	 * @param lines  number of lines for multiline messages
 	 * @return returns 1 if group doesn't exist, otherwise 0
-	 * @author github.com/oliverrascheja
 	 */
 	public static int notifyToGroup(String groupName, String user, String message, int lines) {
 		Group gr = null;
@@ -194,11 +190,10 @@ public class Server {
 	
 	
 	/**
-	 * Sending a recieved message to the reciever.
-	 * @param userName  the reciever's user name
+	 * Sending a received message to the sender.
+	 * @param userName  the user name of the sender
 	 * @param msg  the message
 	 * @return status of the sent message. 0: successfully sent, 1: user not found
-	 * @author github.com/oliverrascheja
 	 */
 	public static int respondOnSocket(String userName, String msg) {
 		for (int i = 0; i < clients.size(); i++) {
@@ -292,14 +287,15 @@ public class Server {
 	 * Disconnecting all users from the server.
 	 */
 	public static void disconnectAllClients() {
-		try {
-			for (Connection client : clients) {
+		for (Connection client : clients) {
+			try {
 				String msg = Response.getNotifyUser("Server", client.getUserName(), "INFO: Server is shutting down.", 1);
 				client.respond(msg);
 				client.clientConnectedToServer = false;
 				clients.remove(client);
 			}
-		} catch (Exception e) {e.printStackTrace();}
+			catch (Exception e) {e.printStackTrace();}
+		}
 	}
 	
 	

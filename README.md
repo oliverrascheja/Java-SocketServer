@@ -55,13 +55,27 @@ This project demonstrates my skills in **network programming, multithreading, an
 
 ### Run the Client
 
+**Option 1 – Run directly from compiled classes:**
+```bash
+java Client
+```
+
+**Option 2 – For developers (requires Make):**
 ```bash
 cd client/src
 make run
 ```
 
+---
+
 ### Run the Server
 
+**Option 1 – Run directly from compiled classes:**
+```bash
+java Server
+```
+
+**Option 2 – For developers (requires Make):**
 ```bash
 cd server/src
 make run

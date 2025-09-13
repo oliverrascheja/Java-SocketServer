@@ -7,11 +7,11 @@ public class Response {
 	
 	/**
 	 * Returning the full message for a specified user
-	 * @param sender  the user's name of the sender
-	 * @param reciever  the reciever's user's name
-	 * @param textMessage  the text message for the reciever
+	 * @param sender  the user name of the sender
+	 * @param receiver  the user name of the receiver
+	 * @param textMessage  the text message for the receiver
 	 * @param lines  number of lines of this message
-	 * @return the formatted message to be sent to the reciever
+	 * @return the formatted message to be sent to the receiver
 	 * @author github.com/oliverrascheja
 	 */
 	public static String getNotifyUser(String sender, String receiver, String textMessage, int lines) {
@@ -23,8 +23,8 @@ public class Response {
 	
 	/**
 	 * Returning the full message for a specified group
-	 * @param groupName  the group name to recieve this message
-	 * @param textMessage  the text message for the reciever
+	 * @param groupName  the group name to receive this message
+	 * @param textMessage  the text message for the receiver
 	 * @param lines  number of lines of this message
 	 * @return the formatted message to be sent to the group
 	 */
@@ -37,7 +37,7 @@ public class Response {
 	
 	/**
 	 * Returning a time stamp to a specified user
-	 * @return the formatted time stamp message to be sent to the reciever
+	 * @return the formatted time stamp message to be sent to the receiver
 	 */
 	public static String getTimeStamp() {
 		SimpleDateFormat datum = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
